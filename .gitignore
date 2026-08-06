@@ -1,0 +1,8 @@
+# Binarios
+*.exe
+netsentinel
+netsentinel-linux*
+dist/
+
+# Reportes generados
+*.json
