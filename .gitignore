@@ -1,6 +1,6 @@
 # Binarios
 *.exe
-netsentinel
+/netsentinel
 netsentinel-linux*
 dist/
 
