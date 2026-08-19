@@ -36,6 +36,7 @@ func HostsFromCIDR(cidr string) ([]string, error) {
 	return hosts, nil
 }
 
+// calcula los saltos de IP
 func inc(ip net.IP) {
 	for j := len(ip) - 1; j >= 0; j-- {
 		ip[j]++
@@ -77,7 +78,9 @@ func Sweep(ctx context.Context, hosts []string, workers int, timeoutMs int) []Ho
 	for _, h := range hosts {
 		select {
 		case <-ctx.Done():
-			break
+			close(jobs)
+			wg.Wait()
+			return up
 		case jobs <- h:
 		}
 	}

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"netsentinel/internal/discovery"
+	"netsentinel/internal/enrichment"
 	"netsentinel/internal/report"
 	"netsentinel/internal/scanner"
 )
@@ -24,6 +25,8 @@ func main() {
 	noPing := flag.Bool("no-ping", false, "Omitir descubrimiento y escanear todas las IPs")
 	outJSON := flag.String("out", "netsentinel-report.json", "Archivo JSON de salida")
 	outHTML := flag.String("html", "netsentinel-report.html", "Archivo HTML de salida")
+	nvdKey := flag.String("nvd-key", "", "API key de NVD (opcional, acelera consultas)")
+	noEnrich := flag.Bool("no-enrich", false, "Desactivar enriquecimiento CVE")
 	flag.Parse()
 
 	// Context con cancelación manual (Ctrl+C)
@@ -35,7 +38,7 @@ func main() {
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-sigChan
-		fmt.Println("\n⚠️  Cancelando escaneo...")
+		fmt.Println("\n  Cancelando escaneo...")
 		cancel()
 	}()
 
@@ -51,12 +54,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("NetSentinel v2: escaneando %s (%d hosts, %d puertos/host)\n", *subnet, len(hosts), len(ports))
+	fmt.Printf("NetSentinel v3: escaneando %s (%d hosts, %d puertos/host)\n", *subnet, len(hosts), len(ports))
 
 	withPing := !*noPing
 	var up []discovery.HostInfo
 	if withPing {
-		fmt.Println("[1/2] Descubriendo hosts vivos...")
+		fmt.Println("[1/3] Descubriendo hosts vivos...")
 		up = discovery.Sweep(ctx, hosts, *workers, *timeout)
 		fmt.Printf("      %d hosts vivos detectados.\n", len(up))
 	} else {
@@ -71,7 +74,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	fmt.Println("[2/2] Escaneando puertos con banner grabbing...")
+	fmt.Println("[2/3] Escaneando puertos con banner grabbing...")
 	results := []scanner.HostResult{}
 	for _, host := range up {
 		select {
@@ -99,6 +102,26 @@ func main() {
 				fmt.Printf("      ✔ %s → %d puertos abiertos\n", host.IP, len(open))
 			} else {
 				fmt.Printf("      · %s → activo, sin puertos abiertos\n", host.IP)
+			}
+		}
+	}
+
+	// ----- [3/3] Enriquecimiento CVE -----
+	if !*noEnrich {
+		fmt.Println("[3/3] Consultando NVD (CVEs conocidos)...")
+		client := enrichment.NewClient(*nvdKey, "nvd-cache.json")
+		for ri := range results {
+			for pi := range results[ri].OpenPorts {
+				p := &results[ri].OpenPorts[pi] // puntero para modificar el original
+				product, version := enrichment.ParseBanner(p.Banner)
+				if product == "" {
+					continue
+				}
+				p.Vulns = client.Lookup(product, version)
+				if len(p.Vulns) > 0 {
+					fmt.Printf("      ⚠ %s:%d (%s %s) → %d CVEs conocidos\n",
+						results[ri].IP, p.Port, product, version, len(p.Vulns))
+				}
 			}
 		}
 	}

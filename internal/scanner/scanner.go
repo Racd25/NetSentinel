@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"netsentinel/internal/enrichment"
 	"sort"
 	"strconv"
 	"strings"
@@ -14,9 +15,10 @@ import (
 
 // OpenPort ahora incluye el banner real capturado.
 type OpenPort struct {
-	Port    int    `json:"port"`
-	Service string `json:"service"`
-	Banner  string `json:"banner,omitempty"`
+	Port    int                        `json:"port"`
+	Service string                     `json:"service"`
+	Banner  string                     `json:"banner,omitempty"`
+	Vulns   []enrichment.Vulnerability `json:"vulnerabilities,omitempty"`
 }
 
 // HostResult agrupa el resultado completo de un host.

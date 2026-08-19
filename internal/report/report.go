@@ -19,10 +19,11 @@ type ScanReport struct {
 func PrintTable(r ScanReport) {
 	fmt.Println()
 	fmt.Println("==========================================================")
-	fmt.Printf(" NetSentinel v2 — Report (%s)\n", r.Subnet)
+	fmt.Printf(" NetSentinel v3 — Report (%s)\n", r.Subnet)
 	fmt.Println("==========================================================")
 	for _, h := range r.Results {
 		if len(h.OpenPorts) == 0 {
+
 			if h.Hostname != "" {
 				fmt.Printf("\n■ Host: %s (%s) — activo, sin puertos abiertos\n", h.IP, h.Hostname)
 			} else {
@@ -36,9 +37,13 @@ func PrintTable(r ScanReport) {
 			fmt.Printf("\n■ Host: %s — %d puertos abiertos\n", h.IP, len(h.OpenPorts))
 		}
 		for _, p := range h.OpenPorts {
+
 			if p.Banner != "" {
 				fmt.Printf("   %-8d %-12s\n", p.Port, p.Service)
 				fmt.Printf("            └─ %s\n", p.Banner)
+				for _, v := range p.Vulns {
+					fmt.Printf("               ⚠ %s  [%s · %.1f]\n", v.ID, v.Severity, v.Score)
+				}
 			} else {
 				fmt.Printf("   %-8d %-12s\n", p.Port, p.Service)
 			}

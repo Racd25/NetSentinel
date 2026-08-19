@@ -18,6 +18,7 @@
         .banner { color: #7f8c8d; font-size: 0.9em; font-family: monospace; }
         .critical { background: #ffe6e6; }
         .hostname { color: #3498db; font-style: italic; }
+        .vuln { color: #c0392b; font-size: 0.85em; margin-left: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -25,8 +26,8 @@
         <h1>🛰️ NetSentinel v2 Report</h1>
         <div class="meta">
             <strong>Subnet:</strong> 192.168.0.0/24<br>
-            <strong>Generated:</strong> 2026-08-12 15:53:00<br>
-            <strong>Hosts found:</strong> 9
+            <strong>Generated:</strong> 2026-08-19 11:07:03<br>
+            <strong>Hosts found:</strong> 6
         </div>
         
         <table>
@@ -49,14 +50,15 @@
                         <div style="margin: 5px 0;">
                             <span class="port">80</span> 
                             <span class="service">HTTP</span>
-                            <br><span class="banner">└─ HTTP/1.0 302 Redirect Date: Wed Aug 12 11:52:52 2026 Content-Length: 235 Connection: close Location:...</span>
+                            <br><span class="banner">└─ HTTP/1.0 302 Redirect Date: Wed Aug 19 11:06:58 2026 Content-Length: 235 Connection: close Location:...</span>
+                            
                         </div>
                         
                     </td>
                 </tr>
                 
                 <tr>
-                    <td><strong>192.168.0.102</strong></td>
+                    <td><strong>192.168.0.113</strong></td>
                     <td class="hostname">—</td>
                     <td>0</td>
                     <td>
@@ -67,7 +69,7 @@
                 </tr>
                 
                 <tr>
-                    <td><strong>192.168.0.117</strong></td>
+                    <td><strong>192.168.0.141</strong></td>
                     <td class="hostname">—</td>
                     <td>0</td>
                     <td>
@@ -78,7 +80,7 @@
                 </tr>
                 
                 <tr>
-                    <td><strong>192.168.0.142</strong></td>
+                    <td><strong>192.168.0.160</strong></td>
                     <td class="hostname">—</td>
                     <td>0</td>
                     <td>
@@ -99,46 +101,32 @@
                     </td>
                 </tr>
                 
-                <tr>
-                    <td><strong>192.168.0.178</strong></td>
-                    <td class="hostname">—</td>
-                    <td>0</td>
-                    <td>
-                        
-                        <em style="color: #95a5a6;">Sin puertos abiertos</em>
-                        
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td><strong>192.168.0.189</strong></td>
-                    <td class="hostname">—</td>
-                    <td>0</td>
-                    <td>
-                        
-                        <em style="color: #95a5a6;">Sin puertos abiertos</em>
-                        
-                    </td>
-                </tr>
-                
-                <tr>
+                <tr class="critical">
                     <td><strong>192.168.0.194</strong></td>
-                    <td class="hostname">—</td>
-                    <td>0</td>
-                    <td>
-                        
-                        <em style="color: #95a5a6;">Sin puertos abiertos</em>
-                        
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td><strong>192.168.0.197</strong></td>
                     <td class="hostname">Nero</td>
-                    <td>0</td>
+                    <td>3</td>
                     <td>
                         
-                        <em style="color: #95a5a6;">Sin puertos abiertos</em>
+                        <div style="margin: 5px 0;">
+                            <span class="port">135</span> 
+                            <span class="service">MSRPC</span>
+                            
+                            
+                        </div>
+                        
+                        <div style="margin: 5px 0;">
+                            <span class="port">139</span> 
+                            <span class="service">NetBIOS</span>
+                            
+                            
+                        </div>
+                        
+                        <div style="margin: 5px 0;">
+                            <span class="port">445</span> 
+                            <span class="service">SMB</span>
+                            
+                            
+                        </div>
                         
                     </td>
                 </tr>

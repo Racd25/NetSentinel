@@ -27,11 +27,12 @@ const htmlTemplate = `<!DOCTYPE html>
         .banner { color: #7f8c8d; font-size: 0.9em; font-family: monospace; }
         .critical { background: #ffe6e6; }
         .hostname { color: #3498db; font-style: italic; }
+        .vuln { color: #c0392b; font-size: 0.85em; margin-left: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🛰️ NetSentinel v2 Report</h1>
+        <h1>🛰️ NetSentinel v3 Report</h1>
         <div class="meta">
             <strong>Subnet:</strong> {{.Subnet}}<br>
             <strong>Generated:</strong> {{.GeneratedAt.Format "2006-01-02 15:04:05"}}<br>
@@ -59,6 +60,9 @@ const htmlTemplate = `<!DOCTYPE html>
                             <span class="port">{{.Port}}</span> 
                             <span class="service">{{.Service}}</span>
                             {{if .Banner}}<br><span class="banner">└─ {{.Banner}}</span>{{end}}
+                            {{range .Vulns}}
+                            <div class="vuln">⚠ {{.ID}} — {{.Severity}} · {{printf "%.1f" .Score}}</div>
+                            {{end}}
                         </div>
                         {{else}}
                         <em style="color: #95a5a6;">Sin puertos abiertos</em>
