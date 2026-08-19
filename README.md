@@ -14,7 +14,7 @@ go build ./cmd/netsentinel
 ./netsentinel -target 192.168.1.0/24 -ports 1-1024 -timeout 2s
 (ejemplo de salida real aquí)
 
--.\netsentinel.exe -subnet 192.168.0.0/24 
+.\netsentinel.exe -subnet 192.168.0.0/24 
 
 ## Architecture
 (cmd/ = entrypoint, internal/ = lógica; cómo funciona la concurrencia)
